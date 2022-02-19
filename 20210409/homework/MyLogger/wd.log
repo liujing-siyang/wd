@@ -1,0 +1,5 @@
+2021-04-09 14:53:16,401  [ERROR] This is an error message
+2021-04-09 14:54:23,837 Mycat [ERROR] This is an error message
+2021-04-09 15:01:21,637 Mycat [ERROR] testLogger.cc  func  14This is an error message
+2021-04-09 15:05:29,554 Mycat [ERROR] testLogger.cc test 26:This is an error message
+2021-04-09 15:08:14,827 Mycat [ERROR] testLogger.cc test 30:This is an error message

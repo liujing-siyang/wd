@@ -1,0 +1,149 @@
+#include <math.h>
+#include <iostream>
+#include <functional>
+
+using std::cout;
+using std::endl;
+using std::bind;
+using std::function;
+
+class Figure
+{ 
+public:
+    /* typedef function<void()> DisplayCallback;//C的写法 */
+    using DisplayCallback = function<void()>;
+    using AreaCallback = function<double()>;
+
+    DisplayCallback _displayCallback;
+    AreaCallback _areaCallback;
+    
+    /* virtual void display() const = 0; */
+    /* virtual double area() const = 0; */
+    //注册回调函数
+    /* void setDisplayCallback(function<void()> &&cb) */
+    void setDisplayCallback(DisplayCallback &&cb)
+    {
+        _displayCallback = std::move(cb);
+    }
+
+    void setAreaCallback(AreaCallback &&cb)
+    {
+        _areaCallback = std::move(cb);
+    }
+
+
+    //执行回调函数
+    void handleDisplayCallback() const
+    {
+        if(_displayCallback)
+        {
+            _displayCallback();
+        }
+    }
+
+    double handleAreaCallback() const
+    {
+        if(_areaCallback)
+        {
+            return _areaCallback();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+};
+
+class Circle
+{ 
+public:
+    Circle(double radius)
+    : _radius(radius)
+    {
+
+    } 
+
+    void display() const 
+    {
+        cout << "Circle";
+    }
+
+    double area() const 
+    {
+        return 3.14159 * _radius * _radius;
+        
+    }
+private:
+    double _radius;
+};
+
+class Rectangle
+{ 
+public:
+    Rectangle(double length, double width)
+    : _length(length)
+    , _width(width)
+    {
+
+    } 
+    void display() const 
+    {
+        cout << "Rectangle";
+    } 
+    double area() const 
+    {
+        return _length * _width;
+        
+    }
+private:
+    double _length;
+    double _width;
+};
+class Triangle
+{ 
+public:
+    Triangle(double a, double b, double c)
+    : _a(a)
+    , _b(b)
+    , _c(c)
+    { 
+
+    } 
+    
+    void display() const
+    {
+        cout << "Triangle";
+    } 
+    //海伦公式计算三角形的面积
+    double area() const
+    {
+        double p = (_a + _b + _c) / 2;
+        return sqrt(p * (p - _a) * (p - _b) * (p - _c));
+    }
+
+private:
+    double _a;
+    double _b;
+    double _c;
+};
+
+void func(Figure &fig)
+{
+    fig.handleDisplayCallback();
+    cout << "'s area : " << fig.handleAreaCallback() << endl;
+}
+
+int main()
+{
+    Circle circle(10);
+    Rectangle rectangle(10, 20);
+    Triangle triangle(3, 4, 5);
+
+    Figure fig;
+    fig.setDisplayCallback(bind(&Circle::display, &circle));
+    fig.setAreaCallback(bind(&Circle::area, &circle));
+    func(fig);
+
+    return 0;
+
+}
